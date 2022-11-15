@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154517009933",
+    "project_id": "petrosoft-1",
+    "storage_bucket": "petrosoft-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154517009933:android:be529f0c0f498015f84744",
+        "android_client_info": {
+          "package_name": "com.vritti.petrosoft_india"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154517009933-d6ekphg42pvpq1it86mnvfb5n5v7f8r4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8knnLUBQN-9Lj_bN9WgXL-_oOT5GO64w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154517009933-d6ekphg42pvpq1it86mnvfb5n5v7f8r4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
