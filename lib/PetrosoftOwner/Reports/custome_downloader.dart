@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:open_filex/open_filex.dart';
 import 'package:petrosoft_india/Classes/pdf_viewer.dart';
 import 'package:petrosoft_india/PetrosoftOwner/Reports/report_list.dart';
 import 'package:dio/dio.dart';
@@ -204,10 +205,11 @@ class _DownloadFileState extends State<DownloadFile> {
      downloading = false;
      // DialogBuilder(context).hideOpenDialog();
      progress = "Download Completed.";
-     Navigator.of(context)
+     OpenFilex.open(file.path);
+     /*Navigator.of(context)
          .pushReplacement(CupertinoPageRoute<bool>(builder: (BuildContext context) {
        return   CustomPdfView(url:file.path);
-     }));
+     }));*/
    } catch (e) {
      print(e);
    }

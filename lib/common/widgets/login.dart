@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:petrosoft_india/AppTheme/assets_files.dart';
 import 'package:petrosoft_india/Classes/colors.dart';
 import 'package:petrosoft_india/Classes/styleforapp.dart';
-import 'package:petrosoft_india/PetrosoftOperator/card_sale.dart';
-import 'package:petrosoft_india/PetrosoftOwner/widget/background.dart';
 import 'package:petrosoft_india/common/Classes/utility.dart';
 import 'package:petrosoft_india/common/widgets/firmsele_page.dart';
 import 'package:petrosoft_india/common/widgets/forgot_password.dart';
 import 'package:petrosoft_india/common/widgets/reset_password.dart';
 import 'package:petrosoft_india/common/widgets/register_new_user.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,9 +20,7 @@ import 'package:uuid/uuid.dart';
 import '../../AdatsoftOwner/adat_owner_home_page.dart';
 import '../../AdatsoftSeller/farmer_home_page.dart';
 import '../../Classes/converter.dart';
-import '../../PetrosoftCustomer/customer_home_page.dart';
-import '../../PetrosoftManager/manager_home_page.dart';
-import '../../PetrosoftOperator/operator_home_page.dart';
+
 import '../../common_home_page.dart';
 import '../../main.dart';
 import 'custom_dialog.dart';
@@ -44,7 +39,7 @@ final clientCode = TextEditingController();
 final custCode = TextEditingController();
 
 class _LoginPageState extends State<LoginPage> {
-  final _firebaseMessaging = FirebaseMessaging;
+ // final _firebaseMessaging = FirebaseMessaging;
   GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormFieldState> mobileFormFieldKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> usernameFormFieldKey = GlobalKey<FormFieldState>();

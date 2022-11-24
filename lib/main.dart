@@ -9,8 +9,6 @@ import 'package:petrosoft_india/PetrosoftOperator/operator_home_page.dart';
 import 'package:petrosoft_india/common_home_page.dart';
 import 'package:petrosoft_india/common/Classes/utility.dart';
 import 'package:camera/camera.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,6 +103,7 @@ Future main() async {
 
 }
 
+/*
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
@@ -172,6 +171,7 @@ Future initialise() async {
 
   });
 }
+*/
 
 
 
