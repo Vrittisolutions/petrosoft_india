@@ -888,7 +888,7 @@ class _LoginPageState extends State<LoginPage> {
       UT.SPF!.setString("CustCodeAmt", custCode.text);
       UT.SPF!.setString("ExternalUserID", clientCode.text);
 
-      _url = UT.APIURL! + 'api/getClientUserLink?appType='+App.Type;
+      _url = '${UT.APIURL!}api/getClientUserLink?appType=${App.Type}';
     //call new method
       data = await UT.apiDt(_url);
       var message=data[0]['clientuserlinkid'];
@@ -924,7 +924,7 @@ class _LoginPageState extends State<LoginPage> {
     userInfo["mobile"]=clientCode.text;
     userInfo["userinfoid"]=UT.FirmData[0]["userinfoid"];
     userInfo["deviceid"]=UT.SPF!.getString("deviceId");
-    var _url = UT.APIURL! + "api/ChkRegisterMobile/Post?tblname=u";
+    var _url = "${UT.APIURL!}api/ChkRegisterMobile/Post?tblname=u";
     List userInfoList=[];
     userInfoList.add(userInfo);
     var Result = await UT.save2Db(_url, userInfoList);

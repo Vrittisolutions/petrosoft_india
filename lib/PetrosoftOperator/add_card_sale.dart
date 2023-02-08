@@ -1,13 +1,9 @@
-import 'dart:convert';
-
 import 'package:petrosoft_india/Classes/colors.dart';
 import 'package:petrosoft_india/Classes/styleforapp.dart';
-import 'package:petrosoft_india/PetrosoftManager/ShiftSale/card_sale.dart';
 import 'package:petrosoft_india/PetrosoftOperator/card_sale.dart';
 import 'package:petrosoft_india/common/Classes/utility.dart';
 import 'package:petrosoft_india/PetrosoftOperator/widgets/search_name.dart';
 import 'package:petrosoft_india/common/widgets/custom_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -184,7 +180,7 @@ class _AddCardSaleState extends State<AddCardSale> {
             ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(" "+value,style: const TextStyle(color: Colors.black),),
+                child: Text("  $value",style: const TextStyle(color: Colors.black),),
               );
             }).toList(),
             hint: Text(
@@ -250,27 +246,21 @@ class _AddCardSaleState extends State<AddCardSale> {
   }
 
   getBatchNo()async{
-    var _url = UT.APIURL! +
-        "api/PumpTrnE/GetMaxBatchNo?year4batchno=" +
-        UT.curyear! +
-        "&shop4batno="+UT.shop_no.toString()+"&acno=" +UT.m["Selected_ACCNO"];
+    var _url = "${UT.APIURL!}api/PumpTrnE/GetMaxBatchNo?year4batchno=${UT.curyear!}&shop4batno=${UT.shop_no}&acno=${UT.m["Selected_ACCNO"]}" ;
     var data = await UT.apiStr(_url);
     batchNo=data;
     batchNoController.text=batchNo.toString().replaceAll(".00", " ");
     setState(() {});
   }
   getBsrNo()async{
-    var _url = UT.APIURL! +
-        "api/getPetroData/GetMaxBathNo?year4batno=" +
-        UT.curyear! +
-        "&shop4batno="+UT.shop_no.toString()+"&dsrno=" +UT.m["dSrNo"];
+    var _url = "${UT.APIURL!}api/getPetroData/GetMaxBathNo?year4batno=${UT.curyear!}&shop4batno=${UT.shop_no}&dsrno=${UT.m["dSrNo"]}";
     var data = await UT.apiStr(_url);
     bsrno=data;
     setState(() {});
   }
   postData() async {
   //  DateTime? selectedDate = DateTime.now();
-    var cardSaleData= Map();
+    var cardSaleData= {};
     cardSaleData["dsr_no"]=UT.m["dSrNo"];
     cardSaleData["bsrno"]=bsrno;
     cardSaleData["dsr_date"]=UT.m['saledate'];
@@ -280,13 +270,11 @@ class _AddCardSaleState extends State<AddCardSale> {
     cardSaleData["bamount"]=amountController.text;
     cardSaleData["pump_hold"]=UT.ClientAcno;
     cardSaleData["isdeleted"]="N";
+    cardSaleData["credit"]=0.00;
     List crhdDataList=[];
     crhdDataList.add(cardSaleData);
-    print(crhdDataList);
-    var _url = UT.APIURL! +
-        "api/PostData/Post?tblname=bath" +
-        UT.curyear! +
-        UT.shop_no!;
+    print('Thisdata-->$crhdDataList');
+    var _url = "${UT.APIURL!}api/PostData/Post?tblname=bath${UT.curyear!}${UT.shop_no!}";
     _url += "&Unique=dsr_no,bsrno";
     var result = await UT.save2Db(_url, crhdDataList);
     if(result=="ok"){
@@ -313,10 +301,7 @@ class _AddCardSaleState extends State<AddCardSale> {
     crhdDataList.add(cardSaleData);
     print("Edited data-->$crhdDataList");
     print(crhdDataList);
-    var _url = UT.APIURL! +
-        "api/PostData/Post?tblname=bath" +
-        UT.curyear! +
-        UT.shop_no!;
+    var _url = "${UT.APIURL!}api/PostData/Post?tblname=bath${UT.curyear!}${UT.shop_no!}";
     _url += "&Unique=dsr_no,bsrno";
     var result = await UT.save2Db(_url, crhdDataList);
     if(result=="ok"){

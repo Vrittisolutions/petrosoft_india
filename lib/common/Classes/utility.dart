@@ -37,6 +37,8 @@ class UT {
 
   // static String? APIURL="http://192.168.1.84/AdatAPIProj/";
 
+  //static String? APIURL="http://192.168.1.72:81/";
+
 
 
    //For Release : use this api while uploading app on play store
@@ -98,7 +100,7 @@ class UT {
   static apiDt(url) async {
     var _url = url;
     TempDBId = await zgetTempDBId();
-    var token = TempDBId! + "|" + CustCodeAmt! + "|" + ExternalUserID!;
+    var token = "${TempDBId!}|${CustCodeAmt!}|${ExternalUserID!}";
     var res = await http.get(Uri.parse(_url), headers: {
       'Authorization': 'Bearer $token',
     });
@@ -109,7 +111,7 @@ class UT {
   static save2Db(url,jdata) async {
     var _url = url;
     TempDBId = await zgetTempDBId();
-    var token = TempDBId! + "|" + CustCodeAmt! + "|" + ExternalUserID!;
+    var token = "${TempDBId!}|${CustCodeAmt!}|${ExternalUserID!}";
 
     var res = await http.post(Uri.parse(_url),
         headers: {'Authorization': 'Bearer $token','Content-Type': 'application/json; charset=UTF-8',},
@@ -119,11 +121,10 @@ class UT {
   }
    static saveImages2Server(id,base64) async {
      TempDBId = await zgetTempDBId();
-     var token = TempDBId! + "|" + CustCodeAmt! + "|" + ExternalUserID!;
+     var token = "${TempDBId!}|${CustCodeAmt!}|${ExternalUserID!}";
      String jsonData='''{"data":"$base64"}''';
      print("jsonData-->$jsonData");
-     var imageApiUrl = UT.APIURL! +
-         "api/Image/Post?id=$id";
+     var imageApiUrl = "${UT.APIURL!}api/Image/Post?id=$id";
      print("imageApi_url-->$imageApiUrl");
      var res = await http.post(Uri.parse(imageApiUrl),
        headers: {'Authorization': 'Bearer $token','Content-Type': 'application/json; charset=UTF-8',},
@@ -134,7 +135,7 @@ class UT {
   static apiStr(url) async {
     var _url = url;
     TempDBId = await zgetTempDBId();
-    var token = TempDBId! + "|" + CustCodeAmt! + "|" + ExternalUserID!;
+    var token = "${TempDBId!}|${CustCodeAmt!}|${ExternalUserID!}";
     var res = await http.get(Uri.parse(_url), headers: {
       'Authorization': 'Bearer $token',
     });
@@ -142,7 +143,7 @@ class UT {
     return data;
   }
   static zgetTempDBId() async {
-    var url = APIURL! + '/api/GenerateToken?userid=' + TokenHistid!;
+    var url = '${APIURL!}/api/GenerateToken?userid=${TokenHistid!}';
     var res = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer VrittiSoltionLTD|$CustCodeAmt|$ExternalUserID',
     });
@@ -156,13 +157,7 @@ class UT {
     var password = UT.SPF!.getString("password");
     var currentYear= UT.SPF!.getString("FinancialYear");
     TokenHistid = const Uuid().v1();
-    var _url = UT.APIURL! +
-        "api/Login/CheckPass?loginid=" +
-        loginId! +
-        "&password=" +
-        password! +
-        "&test=" +
-        TokenHistid!;
+    var _url = "${UT.APIURL!}api/Login/CheckPass?loginid=${loginId!}&password=${password!}&test=${TokenHistid!}";
     String? _str = UT.SPF!.getString("FirmData");
     FirmData = jsonDecode(_str!);
     int? i = UT.SPF!.getInt("firmno");
@@ -194,12 +189,12 @@ class UT {
 
   }
   static loadSetup() async {
-    var _url=UT.APIURL!+"api/GetSetup/Get?shop=" + shop_no!;
+    var _url="${UT.APIURL!}api/GetSetup/Get?shop=${shop_no!}";
     setUpData= await apiDt(_url);
 
   }
   static loadAcSet() async {
-    acSetData= await apiDt(UT.APIURL!+"api/AdatAcSet/AcSet?year="+curyear!+ "&shop=" + shop_no!);
+    acSetData= await apiDt("${UT.APIURL!}api/AdatAcSet/AcSet?year=${curyear!}&shop=${shop_no!}");
   }
   static Setup(key) {
     key = key.toLowerCase();
@@ -338,7 +333,7 @@ class UT {
          "&shop="+UT.shop_no.toString()+"&Where=lk_date = '" + date1 + "' order by lk_date&Addrow=false";
      var  response = await UT.apiStr(_url);
      dtlk=json.decode(response);
-     if (dtlk.length > 0)
+     if (dtlk.isNotEmpty)
      {
        if (dtlk[0]["locked"] == "1")
        {
@@ -461,13 +456,7 @@ class CommonWidget{
        valueColor:AlwaysStoppedAnimation<Color>(ColorsForApp.appThemePetroOwner))
    :App.Type=="PetroManager"?
     CircularProgressIndicator(
-       valueColor:AlwaysStoppedAnimation<Color>(PetroOwnerAppTheme.blueColor))
-   :App.Type=="AdatSeller"?
-    CircularProgressIndicator(
-   valueColor:AlwaysStoppedAnimation<Color>(UT.adatSoftSellerAppColor!))
-       :App.Type=="AdatOwner"?
-     CircularProgressIndicator(
-       valueColor:AlwaysStoppedAnimation<Color>(ColorsForApp.appThemeColorAdatOwner)):
+       valueColor:AlwaysStoppedAnimation<Color>(PetroOwnerAppTheme.blueColor)):
    const CircularProgressIndicator(
        valueColor:AlwaysStoppedAnimation<Color>(Colors.black));
   }
@@ -523,19 +512,5 @@ class CommonButtonForAllApp extends StatelessWidget {
       )
     );
   }
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
 

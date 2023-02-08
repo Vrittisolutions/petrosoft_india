@@ -29,15 +29,7 @@ class _CardSaleState extends State<CardSale> {
 
   getData() async {
    await getCardList();
-    var _url = UT.APIURL! +
-        "api/getPetroData/GetCardSale4Cash?saleyear=" +
-        UT.curyear! +
-        "&shop=" +
-        UT.shop_no! +
-        "&date=" +
-        UT.m['saledate'].toString()+
-    "&shift="+UT.m['shift'].toString()+
-    "&pump_hold="+UT.ClientAcno.toString();
+    var _url = "${UT.APIURL!}api/getPetroData/GetCardSale4Cash?saleyear=${UT.curyear!}&shop=${UT.shop_no!}&date=${UT.m['saledate']}&shift=${UT.m['shift']}&pump_hold=${UT.ClientAcno}";
     cardSaleData = await UT.apiDt(_url);
     print("cardSaleData-->$cardSaleData");
     dSrno=cardSaleData[0]["dsr_no"].toString();
@@ -73,7 +65,7 @@ class _CardSaleState extends State<CardSale> {
               icon: const Icon(Icons.arrow_back),
             ),
             backgroundColor: ColorsForApp.appThemeColor),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -120,14 +112,14 @@ class _CardSaleState extends State<CardSale> {
                                                         Expanded(
 
                                                           child: Padding(
-                                                            padding: EdgeInsets.only(
+                                                            padding: const EdgeInsets.only(
                                                                 left: 15, top: 7),
                                                             child: Text(_cardName,
                                                               style: StyleForApp
                                                                   .text_style_bold_16_owner_dark,),),
                                                         ),
                                                         Padding(
-                                                          padding: EdgeInsets.only(
+                                                          padding: const EdgeInsets.only(
                                                               left: 10, top: 7,right: 6),
                                                           child: Text('Amount',
                                                             style: StyleForApp
@@ -152,9 +144,9 @@ class _CardSaleState extends State<CardSale> {
                                                           ],
                                                         ),
                                                         Padding(
-                                                          padding: EdgeInsets.only(left: 15,right: 4),
+                                                          padding: const EdgeInsets.only(left: 15,right: 4),
                                                           child: Padding(
-                                                            padding: EdgeInsets.only(
+                                                            padding: const EdgeInsets.only(
                                                                 left: 15, top: 7),
                                                             child: Text("\u{20B9}"+cardSaleData[index]["bamount"].toStringAsFixed(2),
                                                               style: StyleForApp
@@ -164,7 +156,7 @@ class _CardSaleState extends State<CardSale> {
                                                   ],
                                                 ),
 
-                                                Padding(padding: EdgeInsets.only(
+                                                Padding(padding: const EdgeInsets.only(
                                                     left: 25,
                                                     top: 7,
                                                     bottom: 7,
@@ -186,12 +178,10 @@ class _CardSaleState extends State<CardSale> {
                                                             .start,
                                                         children: [
                                                           Text(
-                                                              "Batch No: " +
-                                                                  cardSaleData[index]["bat_no"]
+                                                              "Batch No: ${cardSaleData[index]["bat_no"]
                                                                       .toString()
                                                                       .replaceAll(
-                                                                      ".0", " ")
-                                                                      .toString(),
+                                                                      ".0", " ")}",
                                                               style: StyleForApp
                                                                   .text_style_normal_14_black
                                                           ),
@@ -206,11 +196,9 @@ class _CardSaleState extends State<CardSale> {
                                                           )
                                                         ],
                                                       ),
-                                                      SizedBox(height: 4,),
+                                                      const SizedBox(height: 4,),
                                                       Text(
-                                                          "Mode: " +
-                                                              cardSaleData[index]["mode"]
-                                                                  .toString(),
+                                                          "Mode: ${cardSaleData[index]["mode"]}",
                                                           style: StyleForApp
                                                               .text_style_normal_14_black
                                                       ),
@@ -262,7 +250,6 @@ class _CardSaleState extends State<CardSale> {
         ),
         floatingActionButton: FloatingActionButton(
           // isExtended: true,
-          child: const Icon(Icons.add),
           backgroundColor: ColorsForApp.appThemePetroOwner,
           onPressed: () {
             Navigator.push(
@@ -271,6 +258,8 @@ class _CardSaleState extends State<CardSale> {
                     builder: (context) =>
                     const AddCardSale(mode: "Add",selectedRow: {},)));
           },
+          // isExtended: true,
+          child: const Icon(Icons.add),
         ),
       ),
     );

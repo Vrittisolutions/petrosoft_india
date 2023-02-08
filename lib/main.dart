@@ -9,9 +9,7 @@ import 'package:petrosoft_india/PetrosoftOperator/operator_home_page.dart';
 import 'package:petrosoft_india/common_home_page.dart';
 import 'package:petrosoft_india/common/Classes/utility.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -89,7 +87,7 @@ Future main() async {
      // return const AdatOwnerHomePage();
     }
     else{
-      return LoginPage();
+      return const LoginPage();
     }
   }
   runApp(
