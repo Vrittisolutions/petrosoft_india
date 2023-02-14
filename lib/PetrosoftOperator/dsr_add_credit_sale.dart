@@ -96,23 +96,24 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
       oldEntryShift=widget.selectedRow['shift'];
       //setState(() {});
 
-      getPumpList();
-      getProductList();
-      getCustomerList();
+      getData();
 
     }else{
       UT.m["Selected_item_rate"]='';
       UT.m["Selected_pump_no"]=UT.m["PUMP_NO"];
       getMaxNo();
-      getPumpList();
-      getProductList();
-      getCustomerList();
+     getData();
       couponNoController.text="0";
     }
   }
+  getData() async {
+    await getPumpList();
+    await getProductList();
+    await getCustomerList();
+  }
   Future<void> downloadFile() async {
     getPdfURl().then((value) async {
-      final pdfUrl = "${UT.ReportAPIURL}/reportspdf/"+value+".pdf";
+      final pdfUrl = "${UT.ReportAPIURL}/reportspdf/$value.pdf";
       Dio dio = Dio();
       final status = await Permission.storage.request();
       if (status.isGranted) {
@@ -126,12 +127,12 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
         try {
           // FileUtils.mkdir([dirloc]);
-          await dio.download(pdfUrl, dirloc + "Invoice" + ".pdf",
+          await dio.download(pdfUrl, "${dirloc}Invoice.pdf",
               onReceiveProgress: (receivedBytes, totalBytes) {
                 print("here 1");
                 setState(() {
                   downloading = true;
-                  progress = ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
+                  progress = "${((receivedBytes / totalBytes) * 100).toStringAsFixed(0)}%";
                   print(progress);
                 });
                 print("here 2");
@@ -147,7 +148,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
           progress = "Download Completed.";
           // path = dirloc + convertCurrentDateTimeToString() + ".pdf";
-          path = dirloc + "Invoice" + ".pdf";
+          path = "${dirloc}Invoice.pdf";
           Navigator.of(context).pop();
         });
         //Navigator.pop(context);
@@ -174,7 +175,8 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
       phoneNumber: '+91-$mobile',
       text: msg,
     );
-    await launch('$link');
+    var linkuri= Uri.parse('$link');
+    await launchUrl(linkuri);
     //  DialogBuilder(context).hideOpenDialog();
 
   }
@@ -474,7 +476,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
         child:InkWell(
           onTap: ()async{
 
-           /* var result = await showSearch<String>(
+            var result = await showSearch<String>(
               context: context,
               delegate: CustomDelegate(commonList:pumpList,ListType: "pumpList"),
             );
@@ -500,7 +502,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
                   _productName = productList[plrow]["item_desc"];
                 }
               }
-            });*/
+            });
 
 
           },
@@ -515,8 +517,8 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
                 borderRadius: BorderRadius.circular(10.0),),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(UT.m["Selected_pump_no"],
-                    style:StyleForApp.text_style_bold_13_black),
+                child: UT.m["Selected_pump_no"]!=null?Text(UT.m["Selected_pump_no"],
+                    style:StyleForApp.text_style_bold_13_black):const Text(''),
               )
           ),
         ));
@@ -561,7 +563,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
   Widget driverName(){
     return  Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
+      child: SizedBox(
           height: 40,
           width: MediaQuery.of(context).size.width,
           /* decoration: BoxDecoration(//DecorationImage
@@ -831,10 +833,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
   Future checkCouponNo(String credVou) async {
     bool checkStatus;
 
-    var _url = UT.APIURL! +
-        "api/CredSale/CheckCouponNo?_curyear="+UT.curyear!+
-        "&shop="+ UT.shop_no! +
-        "&vouNo=$credVou&coupon="+ couponNoController.text;
+    var _url = "${UT.APIURL!}api/CredSale/CheckCouponNo?_curyear=${UT.curyear!}&shop=${UT.shop_no!}&vouNo=$credVou&coupon=${couponNoController.text}";
 
     var data = await UT.apiStr(_url);
     print("coupon _url-->$_url");
@@ -883,12 +882,13 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
                 if (widget.mode == "Edit") {
                   saveEditedData();
                 }else{
-                  checkCouponNo(maxNo.toString().padLeft(6,'0')).then((value){
+                  saveData();
+                /*  checkCouponNo(maxNo.toString().padLeft(6,'0')).then((value){
                     if(value==true){
                       DialogBuilder(context).showLoadingIndicator('');
-                      saveData();
+
                     }
-                  });
+                  });*/
                 }
 
               }
@@ -958,29 +958,21 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
       imageData["imageid"] = UT.imageList[i]["imageID"].toString();
       imageData["client_code"] = UT.CustCodeAmt! + UT.curyear! + UT.shop_no!;
       imageData["recordtable"] =
-          "crsl" + maxNo.toString().padLeft(6, '0') + "_" +
-              UT.imageList[i]["image_sequenceId"].toString();
+          "crsl${maxNo.toString().padLeft(6, '0')}_${UT.imageList[i]["image_sequenceId"]}";
       imageDataList.add(imageData);
       var result = UT.saveImages2Server(
-          imageData["imageid"], UT.m["img" + (i + 1).toString()]);
+          imageData["imageid"], UT.m["img${i + 1}"]);
     }
-    var imageApi_url = UT.APIURL! +
-        "api/PostData/Post?tblname=imagedocumenttable";
+    var imageApi_url = "${UT.APIURL!}api/PostData/Post?tblname=imagedocumenttable";
     imageApi_url += "&Unique=client_code,recordtable&iscommDB=true";
     var response = await UT.save2Db(imageApi_url, imageDataList);
 
 
-    var _url = UT.APIURL! +
-        "api/PostData/Post?tblname=crhd" +
-        UT.curyear! +
-        UT.shop_no!;
+    var _url = "${UT.APIURL!}api/PostData/Post?tblname=crhd${UT.curyear!}${UT.shop_no!}";
     _url += "&Unique=cred_vou";
     var result = await UT.save2Db(_url, crhdDataList);
 
-    var _url1 = UT.APIURL! +
-        "api/PostData/Post?tblname=crsl" +
-        UT.curyear! +
-        UT.shop_no!;
+    var _url1 = "${UT.APIURL!}api/PostData/Post?tblname=crsl${UT.curyear!}${UT.shop_no!}";
     _url1 += "&Unique=cred_vou,srno,line_no";
     var result1 = await UT.save2Db(_url1, crslDataList);
 
@@ -1080,8 +1072,8 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
   }
   saveData() async {
-    var crhdData = Map();
-    var crslData = Map();
+    var crhdData = {};
+    var crslData = {};
     //Todo: code for If user want to change old entry  :development by shilpa
     checkNewSrNo().then((value) async {
       if(value!=null){
@@ -1128,28 +1120,21 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
           var imageData= new Map();
           imageData["imageid"]=UT.imageList[i]["imageID"].toString();
           imageData["client_code"]=UT.CustCodeAmt!+UT.curyear!+UT.shop_no!;
-          imageData["recordtable"]="crsl"+value.toString().padLeft(6,'0')+"_"+UT.imageList[i]["image_sequenceId"].toString();
+          imageData["recordtable"]="crsl${value.toString().padLeft(6,'0')}_${UT.imageList[i]["image_sequenceId"]}";
           imageDataList.add(imageData);
-          var result = UT.saveImages2Server(imageData["imageid"],UT.m["img"+(i+1).toString()]);
+          var result = UT.saveImages2Server(imageData["imageid"],UT.m["img${i+1}"]);
         }
-        var imageApi_url = UT.APIURL! +
-            "api/PostData/Post?tblname=imagedocumenttable";
-        imageApi_url += "&Unique=client_code,recordtable&iscommDB=true";
-        var response = await UT.save2Db(imageApi_url, imageDataList);
+        var imageApiUrl = "${UT.APIURL!}api/PostData/Post?tblname=imagedocumenttable";
+        imageApiUrl += "&Unique=client_code,recordtable&iscommDB=true";
+        var response = await UT.save2Db(imageApiUrl, imageDataList);
         List crhdDataList=[];
         List crslDataList=[];
         crhdDataList.add(crhdData);
         crslDataList.add(crslData);
-        var _url = UT.APIURL! +
-            "api/PostData/Post?tblname=crhd" +
-            UT.curyear! +
-            UT.shop_no!;
+        var _url = "${UT.APIURL!}api/PostData/Post?tblname=crhd${UT.curyear!}${UT.shop_no!}";
         _url += "&Unique=cred_vou";
         var result = await UT.save2Db(_url, crhdDataList);
-        var _url1 = UT.APIURL! +
-            "api/PostData/Post?tblname=crsl" +
-            UT.curyear! +
-            UT.shop_no!;
+        var _url1 = "${UT.APIURL!}api/PostData/Post?tblname=crsl${UT.curyear!}${UT.shop_no!}";
         _url1 += "&Unique=cred_vou,srno,line_no";
         var result1 = await UT.save2Db(_url1, crslDataList);
         UT.apiStr(UT.APIURL!+"/api/LedgPost?EntryType=CREDITSALE&Shop=" + UT.shop_no.toString() + "&Condition=cred_vou='" + crhdData["cred_vou"] + "'");
@@ -1157,7 +1142,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
           DialogBuilder(context).hideOpenDialog();
           double totalGst=double.parse(cgstController.text)+double.parse(sgstController.text);//double.parse(amountController.text)toStringAsFixed
           stringToSendWhatsApp="Invoice Alert !\nInvoice No. :${value.toString().padLeft(6,'0')}\nInvoice Date :${UT.dateMonthYearFormat(UT.m['saledate'])}\n"
-              "Product Name : ${_productName}\nQty :${quantityController.text}\nRate :${double.parse(rateController.text).toStringAsFixed(2)}\nAmount : ${double.parse(amountController.text).toStringAsFixed(2)}\n"
+              "Product Name : $_productName\nQty :${quantityController.text}\nRate :${double.parse(rateController.text).toStringAsFixed(2)}\nAmount : ${double.parse(amountController.text).toStringAsFixed(2)}\n"
               "Service Charge :${double.parse(serviceChargeController.text).toStringAsFixed(2)}\nGST 18% :${totalGst.toStringAsFixed(2)}\nTotal Amt. : ${double.parse(totalAmountController.text).toStringAsFixed(2)}\n\n\n"
               "From,\n${UT.firm_name}";
           return showDialog(
@@ -1236,21 +1221,14 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
     });
   }
   getCustomerList() async {
-    var _url = UT.APIURL! +
-        "api/AccountMaster/GetCust?Yr=" +
-        UT.curyear! +
-        "&Shop=" +
-        UT.shop_no!+"&Cols=acno,name,pager";
+    var _url = "${UT.APIURL!}api/AccountMaster/GetCust?Yr=${UT.curyear!}&Shop=${UT.shop_no!}&Cols=acno,name,pager";
     var data = await UT.apiDt(_url);
     UT.customerList=data;
   }
   getPumpList() async {
     //  pumpmst = GetURLDt(APIURL + "/api/PumpLste/GetData?shop=" + Firm("Shop") + "&Where=isdeleted<>'Y' order by pump_no");
 
-    var _url = UT.APIURL! +
-        "api/PumpLste/GetData?shop=" +
-        UT.shop_no! +
-        "&Where=isdeleted<>'Y' order by pump_no";
+    var _url = "${UT.APIURL!}api/PumpLste/GetData?shop=${UT.shop_no!}&Where=isdeleted<>'Y' order by pump_no";
     var data = await UT.apiDt(_url);
     pumpList=data;
   }
@@ -1272,10 +1250,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
   }
   getProductList() async {
 
-    var _url = UT.APIURL! +
-        "api/ItemEnt9P/getItemWithRate?firmNo=" +
-        UT.shop_no! +
-        "&date="+ UT.m['saledate'].toString();
+    var _url = "${UT.APIURL!}api/ItemEnt9P/getItemWithRate?firmNo=${UT.shop_no!}&date=${UT.m['saledate']}";
     print("_url-->$_url");
     var data = await UT.apiDt(_url);
 
@@ -1285,10 +1260,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
   }
   Future getMaxSlipNo()async{
-    var _url = UT.APIURL! +
-        "api/CredSale/getMax?year4max=" +
-        UT.curyear! +
-        "&shop4max="+UT.shop_no.toString()+"&col=sale_memo&cust_code=${UT.m["Selected_ACCNO"]}";
+    var _url = "${UT.APIURL!}api/CredSale/getMax?year4max=${UT.curyear!}&shop4max=${UT.shop_no}&col=sale_memo&cust_code=${UT.m["Selected_ACCNO"]}";
     var data = await UT.apiStr(_url);
     if(data==""||data==null){
       return data;
@@ -1299,10 +1271,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
     }
   }
   Future getMaxCouponNo(String cust_code)async{
-    var _url = UT.APIURL! +
-        "api/CredSale/getMax?year4max=" +
-        UT.curyear! +
-        "&shop4max="+UT.shop_no.toString()+"&col=coupon_no&cust_code=$cust_code";
+    var _url = "${UT.APIURL!}api/CredSale/getMax?year4max=${UT.curyear!}&shop4max=${UT.shop_no}&col=coupon_no&cust_code=$cust_code";
     var data = await UT.apiStr(_url);
     if(data==""||data==null){
       return data;
@@ -1314,10 +1283,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
   }
   getMaxNo()async{
-    var _url = UT.APIURL! +
-        "api/CredSale/GetMaxSrno?curyear=" +
-        UT.curyear! +
-        "&shop="+UT.shop_no.toString();
+    var _url = "${UT.APIURL!}api/CredSale/GetMaxSrno?curyear=${UT.curyear!}&shop=${UT.shop_no}";
 
     var data = await UT.apiStr(_url);
     maxNo=data;
@@ -1327,10 +1293,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
   getMaxSlip()async{
 // "&vouno=" + (Flt($("#cred_vou").val()) - 1).toString().padStart(6, "0"))
     int credVou=int.parse(maxNo!)-1;
-    var _url = UT.APIURL! +
-        "api/CredSale/GetMaxSlipNo?year4slipno=" +
-        UT.curyear! +
-        "&shop4slipno="+UT.shop_no.toString()+"&vouno=${credVou.toString().padLeft(6,'0')}";
+    var _url = "${UT.APIURL!}api/CredSale/GetMaxSlipNo?year4slipno=${UT.curyear!}&shop4slipno=${UT.shop_no}&vouno=${credVou.toString().padLeft(6,'0')}";
     print(_url);
     var data = await UT.apiStr(_url);
     print('MaxSlip-->$data');
@@ -1342,18 +1305,12 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
     getCustomerList();
   }
   Future getPdfURl()async{
-    var _url = UT.APIURL! +
-        "api/CredSalePrint?shop=" +
-        UT.shop_no.toString()+
-        "&credvou="+srNo.toString().padLeft(6,'0');
+    var _url = "${UT.APIURL!}api/CredSalePrint?shop=${UT.shop_no}&credvou=${srNo.toString().padLeft(6,'0')}";
     var data = await UT.apiStr(_url);
     return data;
   }
   Future checkNewSrNo()async{
-    var _url = UT.APIURL! +
-        "api/ChkNewSrno?Table=crhd" +
-        UT.curyear! +UT.shop_no.toString()+
-        "&Col=cred_vou&length=6";
+    var _url = "${UT.APIURL!}api/ChkNewSrno?Table=crhd${UT.curyear!}${UT.shop_no}&Col=cred_vou&length=6";
     var data = await UT.apiStr(_url);
     srNo=data;
     return data;
