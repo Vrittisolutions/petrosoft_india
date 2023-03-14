@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 import 'package:petrosoft_india/AppTheme/assets_files.dart';
 import 'package:petrosoft_india/Classes/colors.dart';
 import 'package:petrosoft_india/Classes/converter.dart';
 import 'package:petrosoft_india/Classes/styleforapp.dart';
 import 'package:petrosoft_india/PetrosoftCustomer/customer_home_page.dart';
-import 'package:petrosoft_india/PetrosoftManager/manager_home_page.dart';
 import 'package:petrosoft_india/PetrosoftOperator/operator_home_page.dart';
 import 'package:petrosoft_india/PetrosoftOwner/owner_drawar.dart';
 import 'package:petrosoft_india/PetrosoftOwner/Reports/report_list.dart';
@@ -14,7 +15,6 @@ import 'package:petrosoft_india/PetrosoftOwner/pending_orders.dart';
 import 'package:petrosoft_india/PetrosoftOwner/rate_master.dart';
 import 'package:petrosoft_india/PetrosoftOwner/receipt_entry.dart';
 import 'package:petrosoft_india/common/Classes/utility.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -82,18 +82,21 @@ class _DashboardState extends State<Dashboard> {
     PetroSoftAssetFiles.paymentHistory,
     PetroSoftAssetFiles.reports,
   ];
-  List<ChartData > chartData = <ChartData>[
+  /*List<ChartData > chartData = <ChartData>[
     ChartData('China',  10.541,ColorsForApp.pie_Chart_petrol_Color),
     ChartData('Brazil', 15.818,ColorsForApp.pie_Chart_speed_Color),
     ChartData('Bolivia', 19.51,ColorsForApp.pie_Chart_diesel_Color),
     ChartData( 'Mexico', 18.302,ColorsForApp.pie_Chart_speed_diesel_Color),
     ChartData('Egypt', 14.017,ColorsForApp.pie_Chart_speed_Color),
     ChartData( 'Mongolia',  15.683,ColorsForApp.pie_Chart_diesel_Color),
-  ];
+  ];*/
   DateTime? selectedDate = DateTime.now();
   Color kPrimaryLightColor = const Color(0xFFF1E6FF);
   @override
   void initState() {
+    _tooltip1 = TooltipBehavior(enable: true);
+    _tooltip2 = TooltipBehavior(enable: true);
+    getData();
     // TODO: implement initState
     super.initState();
     checkVersion();
@@ -127,6 +130,36 @@ class _DashboardState extends State<Dashboard> {
   }
   String? sendDateToApi;
   String? displayDateFormat;
+  late TooltipBehavior _tooltip1;
+  late TooltipBehavior _tooltip2;
+  late ChartData credData;
+  late ChartData balData;
+  late List<ChartData> combCredData=[];
+  late List<ChartData> combBalData=[];
+
+  getData() async {
+    var url = "${UT.APIURL!}api/PetroChart/getcreditsale?_yr=${UT.curyear}&_sh=${UT.shop_no}";
+    var custCred = await UT.apiStr(url);
+    var custCredData = jsonDecode(custCred);
+    for (int i = 0; i < custCredData.length; i++) {
+      credData = ChartData(
+        custCredData[i]["name"],
+        custCredData[i]["totamt"],
+      );
+      combCredData.add(credData);
+    }
+
+    var url1 = "${UT.APIURL!}api/ChartCustBal/Get?yr=${UT.curyear}&sh=${UT.shop_no}";
+    var custBal = await UT.apiStr(url1);
+    var custBalData = jsonDecode(custBal);
+    for (int i = 0; i < custBalData.length; i++) {
+      balData = ChartData(
+        custBalData[i]["name"],
+        custBalData[i]["balance"],
+      );
+      combBalData.add(credData);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,8 +194,8 @@ class _DashboardState extends State<Dashboard> {
                     width: 5,
                   ),
                    Padding(
-                    padding: EdgeInsets.only(right: 8.0),
-                    child: Text('${startFY}-${endFY}'),
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text('$startFY-$endFY'),
                   ),
                 ],
               )
@@ -196,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
                         'Sales',
                         style: StyleForApp.text_style_normal_14_black,
                       ),
-                      Container(
+                      SizedBox(
                         height: 100,
                         child: ListView.builder(
                             shrinkWrap: true,
@@ -282,7 +315,7 @@ class _DashboardState extends State<Dashboard> {
                         "Today's Rate",
                         style: StyleForApp.text_style_normal_14_black,
                       ),
-                      Container(
+                      SizedBox(
                         height: 100,
                         child: ListView.builder(
                             shrinkWrap: true,
@@ -341,7 +374,7 @@ class _DashboardState extends State<Dashboard> {
                                           children: [
                                             Image.asset(PetroSoftAssetFiles.rupees,height: 15,width: 15,),
                                             Text(
-                                              '${todaySale[index].amount}',
+                                              todaySale[index].amount,
                                               style: TextStyle(
                                                   foreground: Paint()..shader = const LinearGradient(
                                                     colors: <Color>[
@@ -379,9 +412,9 @@ class _DashboardState extends State<Dashboard> {
                           decoration: const BoxDecoration(
                             color: Colors.grey,
 
-                            borderRadius:  const BorderRadius.only(
-                              topLeft: const Radius.circular(20.0),
-                              bottomRight: const Radius.circular(20.0),
+                            borderRadius:  BorderRadius.only(
+                              topLeft: Radius.circular(20.0),
+                              bottomRight: Radius.circular(20.0),
                             ),
                           ),
                           child: PieChart(
@@ -407,7 +440,7 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ),
                             chartValuesOptions: const ChartValuesOptions(
-                              chartValueStyle: const TextStyle(color: Colors.white),
+                              chartValueStyle: TextStyle(color: Colors.white),
                               showChartValueBackground: false,
                               showChartValues: true,
                               showChartValuesInPercentage: false,
@@ -420,6 +453,66 @@ class _DashboardState extends State<Dashboard> {
                       const SizedBox(
                         height: 10,
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 290,
+                          child: SfCartesianChart(
+                              primaryXAxis: CategoryAxis(
+                                labelIntersectAction: AxisLabelIntersectAction.hide,
+                                labelRotation: 320,
+                                labelStyle: const TextStyle(fontSize: 8),
+                                labelAlignment: LabelAlignment.start,
+                              ),
+                              primaryYAxis: NumericAxis(
+                                  labelStyle: const TextStyle(fontSize: 10),
+                                  minimum: 0, maximum: 1200000, interval: 200000),
+                              tooltipBehavior: _tooltip1,
+                              isTransposed: true,
+                              title: ChartTitle(text: 'Customer wise Credit Sale',alignment:ChartAlignment.near,textStyle: StyleForApp.text_style_bold_13_indigo),
+                              series: <ChartSeries<ChartData, String>>[
+                                BarSeries<ChartData, String>(
+                                  dataSource: combCredData,
+                                  width: 0.5,
+                                  xValueMapper: (ChartData data, _) => data.x,
+                                  yValueMapper: (ChartData data, _) => data.y,
+                                  name: 'Customer wise Credit Sale',
+                                  color: ColorsForApp.appThemeColorPetroOperator,
+                                )
+                                // color: const Color.fromRGBO(8, 142, 255, 1))
+                              ]),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 290,
+                          child: SfCartesianChart(
+                              primaryXAxis: CategoryAxis(
+                                labelIntersectAction: AxisLabelIntersectAction.hide,
+                                labelRotation: 320,
+                                labelStyle: const TextStyle(fontSize: 8),
+                                labelAlignment: LabelAlignment.start,
+                              ),
+                              primaryYAxis: NumericAxis(
+                                  labelStyle: const TextStyle(fontSize: 10),
+                                  minimum: 0, maximum: 12000, interval: 2000),
+                              tooltipBehavior: _tooltip2,
+                              isTransposed: true,
+                              title: ChartTitle(text: 'Customer wise Balance',alignment:ChartAlignment.near,textStyle: StyleForApp.text_style_bold_13_indigo),
+                              series: <ChartSeries<ChartData, String>>[
+                                BarSeries<ChartData, String>(
+                                  dataSource: combBalData,
+                                  width: 0.5,
+                                  xValueMapper: (ChartData data, _) => data.x,
+                                  yValueMapper: (ChartData data, _) => data.y,
+                                  name: 'Customer wise Credit Sale',
+                                  color: ColorsForApp.appThemeColorAdatOwner,
+                                )
+                                // color: const Color.fromRGBO(8, 142, 255, 1))
+                              ]),
+                        ),
+                      ),
                       Text(
                         "Daily Sale",
                         style: StyleForApp.text_style_normal_14_black,
@@ -429,7 +522,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
+                          child: SizedBox(
                             height: 190,
                             child: SfCartesianChart(
                                 primaryXAxis: CategoryAxis(majorGridLines: const MajorGridLines(width: 0)),
@@ -544,7 +637,7 @@ class _DashboardState extends State<Dashboard> {
         context: context,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20.0),topRight:  Radius.circular(20.0)),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0),topRight:  Radius.circular(20.0)),
         ),
         builder: (context) {
           return Container(
@@ -659,10 +752,10 @@ class _DashboardState extends State<Dashboard> {
         context: context,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
-          borderRadius: const BorderRadius.only(topLeft: Radius.circular(20.0),topRight:  Radius.circular(20.0)),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0),topRight:  Radius.circular(20.0)),
         ),
         builder: (context) {
-          return Container(
+          return SizedBox(
             height: MediaQuery.of(context).size.height * 0.75,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -779,11 +872,7 @@ class _DashboardState extends State<Dashboard> {
 
   }
   managerReceiptEntryPage() async {
-    var _url = UT.APIURL! +
-        "api/AccountMaster/GetCust?Yr=" +
-        UT.curyear! +
-        "&Shop=" +
-        UT.shop_no!;
+    var _url = "${UT.APIURL!}api/AccountMaster/GetCust?Yr=${UT.curyear!}&Shop=${UT.shop_no!}";
     var data = await UT.apiDt(_url);
     UT.customerList=data;
     Navigator.push(
@@ -809,9 +898,7 @@ class _DashboardState extends State<Dashboard> {
             const ManagerReportList()));
   }
   managerRateMasterDates() async {
-    var _url = UT.APIURL! +
-        "api/PriceListEnt/GetDistinctDate4mobile?_shopno=" +
-        UT.shop_no!;
+    var _url = "${UT.APIURL!}api/PriceListEnt/GetDistinctDate4mobile?_shopno=${UT.shop_no!}";
     var data = await UT.apiDt(_url);
     var lastRc = data[data.length - 1];
     validFromDate = UT.yearMonthDateFormat(lastRc["validfrom"]);
@@ -869,11 +956,7 @@ class _DashboardState extends State<Dashboard> {
 
   }
   ownerReceiptEntryPage() async {
-    var _url = UT.APIURL! +
-        "api/AccountMaster/GetCust?Yr=" +
-        UT.curyear! +
-        "&Shop=" +
-        UT.shop_no!;
+    var _url = "${UT.APIURL!}api/AccountMaster/GetCust?Yr=${UT.curyear!}&Shop=${UT.shop_no!}";
     var data = await UT.apiDt(_url);
     UT.customerList=data;
     Navigator.push(
@@ -949,10 +1032,9 @@ class TodaySale {
 }
 
 class ChartData {
-  final dynamic x;
-  final num y;
-  final Color _color;
-  ChartData(this.x, this.y,this._color);
+  final String x;
+  final double y;
+  ChartData(this.x, this.y);
 
 }
 class _CustomColumnSeriesRenderer extends ColumnSeriesRenderer {

@@ -5,7 +5,6 @@ import 'package:petrosoft_india/Classes/converter.dart';
 import 'package:petrosoft_india/Classes/styleforapp.dart';
 import 'package:petrosoft_india/PetrosoftOwner/petrosoft_owner_app_theme.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -67,7 +66,7 @@ class UT {
   static var FirmData;
   static var mastData;
   static var itemList;
-  static var m=  Map();
+  static var m=  {};
   static var setUpData;
   static var acSetData;
   static var couponData;
@@ -151,7 +150,7 @@ class UT {
     return _id;
   }
   static setEnv() async {
-    APIURL = UT.SPF!.getString("APIURL");
+    //APIURL = UT.SPF!.getString("APIURL");
     loginId = UT.SPF!.getString("loginId");
     loginName = UT.SPF!.getString("loginName");
     var password = UT.SPF!.getString("password");

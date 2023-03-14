@@ -102,7 +102,7 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                           search(value);
                         },
                         controller: searchController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Search",
                             hintText: "Search",
                             prefixIcon: Icon(Icons.search),
@@ -124,9 +124,8 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                 return searchSaleData[index]["cred_vou"].toString()==""?Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SizedBox(height: 100,),
-                                    Container(
-                                      child: Center(child:Text("No data found!!",style: UT.PetroOwnerNoDataStyle)),)
+                                    const SizedBox(height: 100,),
+                                    Center(child:Text("No data found!!",style: UT.PetroOwnerNoDataStyle))
                                   ],
                                 )
                                     :InkWell(
@@ -146,7 +145,7 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                           children:
                                           [
                                             Text(
-                                                searchSaleData[index]["cred_vou"].toString()+" - "+ searchSaleData[index]["name"],
+                                                "${searchSaleData[index]["cred_vou"].toString()} - ${searchSaleData[index]["name"]}",
                                                 maxLines: 2,
                                                 style: StyleForApp.text_style_bold_16_operator_dark
                                             ),
@@ -163,7 +162,7 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                                     searchSaleData[index]["sale_memo"]!=""?searchSaleData[index]["sale_memo"].toString():"-",
                                                     style: StyleForApp.text_style_normal_14_black
                                                 ),
-                                                SizedBox(width: 20,),
+                                                const SizedBox(width: 20,),
                                                 Text(
                                                     "Coupon No : " ,
                                                     // CreditSaleData[index]["veh_no"].toString(),
@@ -175,7 +174,7 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                                 )
                                               ],
                                             ),
-                                            SizedBox(height: 5,),
+                                            const SizedBox(height: 5,),
                                             Row(
                                               children: [
                                                 Text(
@@ -183,7 +182,11 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                                     // CreditSaleData[index]["veh_no"].toString(),
                                                     style: StyleForApp.text_style_normal_14_black
                                                 ),
-                                                SizedBox(width: 5,),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 5,),
+                                            Row(
+                                              children: [
                                                 Text(
                                                     searchSaleData[index]["qty_sold"].toStringAsFixed(2) ,
                                                     // CreditSaleData[index]["veh_no"].toString(),
@@ -207,7 +210,7 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
                                             ),
                                             const SizedBox(height: 5,),
                                             Text(
-                                                searchSaleData[index]["veh_no"].toString()+" - "+searchSaleData[index]['narration'].toString(),
+                                                "${searchSaleData[index]["veh_no"]} - ${searchSaleData[index]['narration']}",
                                                 style: StyleForApp.text_style_normal_14_owner
                                             )
 
@@ -229,12 +232,13 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
         ),
         floatingActionButton: FloatingActionButton(
           // isExtended: true,
-          child: const Icon(Icons.add),
           backgroundColor:  ColorsForApp.icon_operator,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(
                 builder: (context) => const DsrAddCreditSale(mode: "Add",selectedRow: {},)));
           },
+          // isExtended: true,
+          child: const Icon(Icons.add),
         ),
       ),
     );
@@ -249,12 +253,12 @@ class _DsrCreditSaleState extends State<DsrCreditSale> {
     query = query.toLowerCase();
     print(query);
     List result = [];
-    searchSaleData.forEach((p) {
+    for (var p in searchSaleData) {
       var name = p["name"].toString().toLowerCase();
       if (name.contains(query)) {
         result.add(p);
       }
-    });
+    }
 
     searchSaleData = result;
     setState(() {});

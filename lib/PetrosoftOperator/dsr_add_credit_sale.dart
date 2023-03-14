@@ -657,7 +657,6 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
             controller: rateController   ,
             keyboardType: TextInputType.number,
             autofocus: false,
-            readOnly: true,
             decoration: InputDecoration(
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
               hintText: "Rate",
@@ -800,7 +799,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
               hintText: "CGST",
               labelText: "CGST",
-              contentPadding: EdgeInsets.all(8.0),
+              contentPadding: const EdgeInsets.all(8.0),
             ),
 
           ),
@@ -904,8 +903,8 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
     return Fluttertoast.showToast(msg: msg);
   }
   saveEditedData() async {
-    var crhdData = Map();
-    var crslData = Map();
+    var crhdData = {};
+    var crslData = {};
     print("save edit");
     crhdData["cred_vou"] = maxNo.toString().padLeft(6, '0');
     crhdData["date"] = UT.yearMonthDateFormat(oldEntryDate);
@@ -954,7 +953,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
     List imageDataList = [];
     for (int i = 0; i < UT.imageList.length; i++) {
-      var imageData = new Map();
+      var imageData = {};
       imageData["imageid"] = UT.imageList[i]["imageID"].toString();
       imageData["client_code"] = UT.CustCodeAmt! + UT.curyear! + UT.shop_no!;
       imageData["recordtable"] =
@@ -989,7 +988,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
       "Invoice Alert !\nInvoice No. :${maxNo.toString().padLeft(
           6, '0')}\nInvoice Date :${UT.dateMonthYearFormat(
           UT.m['saledate'])}\n"
-          "Product Name : ${_productName}\nQty :${quantityController
+          "Product Name : $_productName\nQty :${quantityController
           .text}\nRate :${double.parse(rateController.text).toStringAsFixed(
           2)}\nAmount : ${double.parse(amountController.text).toStringAsFixed(
           2)}\n"
@@ -1117,7 +1116,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
         List imageDataList=[];
         for(int i=0;i < UT.imageList.length;i++){
-          var imageData= new Map();
+          var imageData= {};
           imageData["imageid"]=UT.imageList[i]["imageID"].toString();
           imageData["client_code"]=UT.CustCodeAmt!+UT.curyear!+UT.shop_no!;
           imageData["recordtable"]="crsl${value.toString().padLeft(6,'0')}_${UT.imageList[i]["image_sequenceId"]}";
@@ -1160,7 +1159,7 @@ class _DsrAddCreditSaleState extends State<DsrAddCreditSale> {
 
                         child: const Text("Cancel"),
                         onPressed: () {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DsrCreditSale()));
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DsrCreditSale()));
                           // Navigator.pop(context);
                         }
                     ),

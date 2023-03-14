@@ -616,7 +616,7 @@ class _ArrivalEntryState extends State<ArrivalEntry> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: ColorsForApp.app_theme_color_light_drawer,
+                            backgroundColor: ColorsForApp.app_theme_color_light_drawer,
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                             textStyle: StyleForApp.text_style_normal_14_black),
                         child: const Text('Cancel',
@@ -635,7 +635,7 @@ class _ArrivalEntryState extends State<ArrivalEntry> {
                       const SizedBox(width: 10,),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary:ColorsForApp.appThemeColorPetroCustomer,
+                            backgroundColor: ColorsForApp.appThemeColorPetroCustomer,
                             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                             textStyle: const TextStyle(
                                 color:Colors.white ,
@@ -843,7 +843,7 @@ class _ArrivalEntryState extends State<ArrivalEntry> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: ColorsForApp.app_theme_color_light_drawer,
+                              backgroundColor: ColorsForApp.app_theme_color_light_drawer,
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                               textStyle: StyleForApp.text_style_normal_14_black),
                           child: const Text('Cancel',
@@ -862,7 +862,7 @@ class _ArrivalEntryState extends State<ArrivalEntry> {
                         const SizedBox(width: 10,),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary:ColorsForApp.appThemeColorPetroCustomer,
+                              backgroundColor: ColorsForApp.appThemeColorPetroCustomer,
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                               textStyle: const TextStyle(
                                   color:Colors.white ,

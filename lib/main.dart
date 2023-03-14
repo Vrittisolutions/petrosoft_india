@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:petrosoft_india/AdatsoftOwner/NewUI/home_page.dart';
 import 'package:petrosoft_india/AdatsoftOwner/adat_owner_home_page.dart';
 import 'package:petrosoft_india/AdatsoftSeller/farmer_home_page.dart';
@@ -56,6 +58,7 @@ Future main() async {
    var setEnvRes= await UT.setEnv();
     print("setEnvRes--$setEnvRes");
   }
+
   nav()  {
     var _appType=UT.SPF!.getString("SPAppType");
     print("_appType-->$_appType");
@@ -202,14 +205,14 @@ class selectAppTypestate extends State<selectAppType>{
                   App.Type="PetroOperator";
                  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                      LoginPage()), (Route<dynamic> route) => false);
+                      const LoginPage()), (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 45,
-                      child: Center(child: Text("Petrosoft Operator",style: StyleForApp.text_style_bold_14_white,)),
                     color: ColorsForApp.secondary,
+                      child: Center(child: Text("Petrosoft Operator",style: StyleForApp.text_style_bold_14_white,)),
                   ),
                 ),
               ),
@@ -219,14 +222,14 @@ class selectAppTypestate extends State<selectAppType>{
                   App.Type="PetroBuyer";
                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                      LoginPage()), (Route<dynamic> route) => false);
+                      const LoginPage()), (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 45,
-                    child: Center(child: Text("Petrosoft Transporter",style: StyleForApp.text_style_bold_14_white,)),
                     color: ColorsForApp.secondary,
+                    child: Center(child: Text("Petrosoft Transporter",style: StyleForApp.text_style_bold_14_white,)),
                   ),
                 ),
               ), InkWell(
@@ -235,14 +238,14 @@ class selectAppTypestate extends State<selectAppType>{
                   App.Type="PetroOwner";
                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                      LoginPage()), (Route<dynamic> route) => false);
+                      const LoginPage()), (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 45,
-                    child: Center(child: Text("Petrosoft Business",style: StyleForApp.text_style_bold_14_white,)),
                     color: ColorsForApp.secondary,
+                    child: Center(child: Text("Petrosoft Business",style: StyleForApp.text_style_bold_14_white,)),
                   ),
                 ),
               ), InkWell(
@@ -251,14 +254,14 @@ class selectAppTypestate extends State<selectAppType>{
                   App.Type="PetroManager";
                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                      LoginPage()), (Route<dynamic> route) => false);
+                      const LoginPage()), (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     height: 45,
-                    child: Center(child: Text("Petrosoft Manager",style: StyleForApp.text_style_bold_14_white,)),
                     color: ColorsForApp.secondary,
+                    child: Center(child: Text("Petrosoft Manager",style: StyleForApp.text_style_bold_14_white,)),
                   ),
                 ),
               ),
@@ -270,7 +273,7 @@ class selectAppTypestate extends State<selectAppType>{
   }
 
 }
- 
+
 
 
 
